@@ -1,5 +1,7 @@
 package com.maxdexter.newretrofit2;
 
+import com.maxdexter.newretrofit2.pogo.Result;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

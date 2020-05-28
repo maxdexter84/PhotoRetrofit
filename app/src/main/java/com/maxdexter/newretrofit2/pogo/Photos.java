@@ -1,5 +1,5 @@
 
-package com.maxdexter.newretrofit2;
+package com.maxdexter.newretrofit2.pogo;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
