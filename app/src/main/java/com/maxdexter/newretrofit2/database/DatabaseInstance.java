@@ -6,7 +6,6 @@ import androidx.room.Database;
 import androidx.room.Room;
 
 import com.maxdexter.newretrofit2.pogo.Image;
-import com.maxdexter.newretrofit2.pogo.Photo;
 
 import java.util.ArrayList;
 import java.util.List;

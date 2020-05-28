@@ -1,16 +1,13 @@
 package com.maxdexter.newretrofit2.network;
 
-import android.app.Application;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.maxdexter.newretrofit2.FlickrService;
 import com.maxdexter.newretrofit2.database.DatabaseInstance;
 import com.maxdexter.newretrofit2.pogo.Image;
-import com.maxdexter.newretrofit2.pogo.ImageBox;
 import com.maxdexter.newretrofit2.pogo.Photo;
 import com.maxdexter.newretrofit2.pogo.Photos;
 import com.maxdexter.newretrofit2.pogo.Result;
@@ -78,8 +75,7 @@ public class NetworkService extends AppCompatActivity implements Callback<Result
               String url = createUrl(p);
                 Image image = new Image();
                 image.setUrl(url);
-                ImageBox.getImageBox().setImages(image);
-
+                DatabaseInstance.getDatabaseInstance(this).getDatabase().mPhotoDAO().insert(image);
             }
             loading = true;
             mLiveData.setValue(loading);

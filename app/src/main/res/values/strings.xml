@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NewRetrofit2</string>
+    <string name="query">найти фотографии</string>
+    <string name="search_text">Найти</string>
 </resources>
