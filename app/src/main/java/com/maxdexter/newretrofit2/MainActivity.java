@@ -12,9 +12,9 @@ import android.widget.ImageView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.maxdexter.newretrofit2.adapter.ImageAdapter;
-import com.maxdexter.newretrofit2.database.DatabaseInstance;
 import com.maxdexter.newretrofit2.network.NetworkService;
 import com.maxdexter.newretrofit2.pogo.Image;
+import com.maxdexter.newretrofit2.pogo.ImageBox;
 
 
 import java.util.List;
@@ -40,17 +40,12 @@ public class MainActivity extends AppCompatActivity{
         mImageView = findViewById(R.id.image);
         TextInputEditText textInputEditText = findViewById(R.id.edit_text);
         initButton(textInputEditText);
-
-
-        DatabaseInstance.getDatabaseInstance(this);
-        loadPhoto(currentPage,term);
-
     }
 
     private void initButton(TextInputEditText textInputEditText) {
         Button button = findViewById(R.id.search_button);
         button.setOnClickListener(v -> {
-            String query = textInputEditText.getText().toString();
+             String query = textInputEditText.getText().toString();
             loadPhoto(currentPage,query);
         });
     }
@@ -69,7 +64,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void setImageView(){
-       List<Image> list = DatabaseInstance.getDatabaseInstance(this).getDatabase().mPhotoDAO().getAll();
+       List<Image> list = ImageBox.getImageBox().getAllImage();
        mRecyclerView = findViewById(R.id.recycler);
         mImageAdapter = new ImageAdapter(list);
         mRecyclerView.setAdapter(mImageAdapter);

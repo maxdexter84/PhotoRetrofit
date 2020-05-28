@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 
 import com.maxdexter.newretrofit2.FlickrService;
-import com.maxdexter.newretrofit2.database.DatabaseInstance;
 import com.maxdexter.newretrofit2.pogo.Image;
+import com.maxdexter.newretrofit2.pogo.ImageBox;
 import com.maxdexter.newretrofit2.pogo.Photo;
 import com.maxdexter.newretrofit2.pogo.Photos;
 import com.maxdexter.newretrofit2.pogo.Result;
@@ -70,12 +70,14 @@ public class NetworkService extends AppCompatActivity implements Callback<Result
         Result result = response.body();
         if(result.getStat().equals("ok")){
             Photos photos = result.getPhotos();
+            if(ImageBox.getImageBox().getAllImage() != null){
+                ImageBox.getImageBox().getAllImage().clear();
+            }
             for(Photo p : photos.getPhoto()){
-                Log.d("happy",p.getTitle());
               String url = createUrl(p);
                 Image image = new Image();
                 image.setUrl(url);
-                DatabaseInstance.getDatabaseInstance(this).getDatabase().mPhotoDAO().insert(image);
+                ImageBox.getImageBox().setAllImage(image);
             }
             loading = true;
             mLiveData.setValue(loading);
