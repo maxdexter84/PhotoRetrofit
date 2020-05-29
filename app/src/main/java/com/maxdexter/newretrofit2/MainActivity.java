@@ -1,84 +1,77 @@
 package com.maxdexter.newretrofit2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.maxdexter.newretrofit2.adapter.ImageAdapter;
+import com.maxdexter.newretrofit2.network.NetworkService;
+import com.maxdexter.newretrofit2.pogo.Image;
+import com.maxdexter.newretrofit2.pogo.ImageBox;
+
+
+import java.util.List;
+
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class MainActivity extends AppCompatActivity implements Callback<Result>{
+
+public class MainActivity extends AppCompatActivity{
     private ImageView mImageView;
     private Retrofit retrofit;
     private FlickrService service;
     int currentPage = 1;
     String term = "moscow";
     private boolean loading;
+    ImageAdapter mImageAdapter;
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mImageView = findViewById(R.id.image);
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.flickr.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        service = retrofit.create(FlickrService.class);
-        
-        startOver();
-
+        TextInputEditText textInputEditText = findViewById(R.id.edit_text);
+        initButton(textInputEditText);
     }
 
-    private void startOver() {
-       currentPage = 1;
-       
-        loadMore(currentPage,term);
-    }
-    //https://www.flickr.com/services/rest/?
-    // method=flickr.photos.search
-    // &api_key=6c8409b814c27833947a1f3fb4172023
-    // &text=moscow
-    // &format=json
-    // &nojsoncallback=1
-    // &api_sig=b307c5559e87e67206668e8d0ff20c39
-
-    private void loadMore(int page, String search) {
-        loading = true;
-        Call<Result> call = service.search(
-                "flickr.photos.search",
-                "6c8409b814c27833947a1f3fb4172023",
-                search,
-                "json",
-                1,
-                page
-                );
-        call.enqueue(this);
+    private void initButton(TextInputEditText textInputEditText) {
+        Button button = findViewById(R.id.search_button);
+        button.setOnClickListener(v -> {
+             String query = textInputEditText.getText().toString();
+            loadPhoto(currentPage,query);
+        });
     }
 
-
-    @Override
-    public void onResponse(Call<Result> call, Response<Result> response) {
-
-        Result result = response.body();
-        if(result.getStat().equals("ok")){
-            Photos photos = result.getPhotos();
-            for(Photo p : photos.getPhoto()){
-                Log.d("happy",p.getTitle());
+    private void loadPhoto(int page,String search) {
+        NetworkService.getInstance().loadMore(page,search);
+        LiveData<Boolean> getLive = NetworkService.getInstance().getLiveData();
+        getLive.observe(this, aBoolean -> {
+            loading = aBoolean;
+            if(loading){
+                setImageView();
+                loading = false;
             }
-        }
+
+        });
+    }
+
+    public void setImageView(){
+       List<Image> list = ImageBox.getImageBox().getAllImage();
+       mRecyclerView = findViewById(R.id.recycler);
+        mImageAdapter = new ImageAdapter(list);
+        mRecyclerView.setAdapter(mImageAdapter);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),6));
+
 
     }
 
-    @Override
-    public void onFailure(Call<Result> call, Throwable t) {
-        Log.d("happy",t.getMessage());
-    }
+
 }

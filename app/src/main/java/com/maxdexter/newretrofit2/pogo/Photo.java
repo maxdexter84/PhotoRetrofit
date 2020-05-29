@@ -1,5 +1,7 @@
 
-package com.maxdexter.newretrofit2;
+package com.maxdexter.newretrofit2.pogo;
+
+
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -33,6 +35,7 @@ public class Photo {
     @SerializedName("isfamily")
     @Expose
     private Integer isfamily;
+
 
     public String getId() {
         return id;

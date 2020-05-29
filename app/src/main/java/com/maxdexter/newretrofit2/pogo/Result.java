@@ -1,5 +1,5 @@
 
-package com.maxdexter.newretrofit2;
+package com.maxdexter.newretrofit2.pogo;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
